@@ -5,14 +5,22 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * This class is a simple application that writes a random number on a file.
@@ -31,15 +39,20 @@ public class BadIOGUI {
     private final Random rng = new Random();
     private final JFrame frame = new JFrame(TITLE);
 
+
     /**
      * 
      */
     public BadIOGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
+        final JPanel center = new JPanel();
+        center.setLayout(new BoxLayout(center, BoxLayout.X_AXIS));
         final JButton write = new JButton("Write on file");
-        canvas.add(write, BorderLayout.CENTER);
-        frame.setContentPane(canvas);
+        center.add(write, BorderLayout.CENTER);
+        final JButton read = new JButton("Read");
+        center.add(read);
+        frame.setContentPane(center);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
          * Handlers
@@ -62,6 +75,24 @@ public class BadIOGUI {
                 }
             }
         });
+
+        read.addActionListener(new ActionListener() {
+            @SuppressWarnings("deprecation")
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                /*
+                 * It will read the same file as write. And print it in the terminal
+                 */
+                final File fileToRead = new File(PATH);
+                try {
+                    final String readFile = FileUtils.readFileToString(fileToRead);
+                    System.out.println(readFile);
+                } catch (final IOException e2) {
+                    JOptionPane.showMessageDialog(BadIOGUI.this.frame, e2, "File Error", JOptionPane.ERROR_MESSAGE);
+                    e2.printStackTrace();
+                }
+            }
+        });
     }
 
     private void display() {
@@ -77,6 +108,10 @@ public class BadIOGUI {
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         frame.setSize(sw / PROPORTION, sh / PROPORTION);
+        /*
+         * To reduce the windows's size into its subcomponents' size.
+         */
+        frame.pack();
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
          * flag makes the OS window manager take care of the default positioning
