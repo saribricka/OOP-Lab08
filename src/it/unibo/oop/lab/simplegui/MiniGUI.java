@@ -10,9 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * This class is a simple application that writes a random number on a file.
@@ -34,8 +36,16 @@ public class MiniGUI {
     public MiniGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
+        
         final JButton write = new JButton("Print a random number on standard output");
         canvas.add(write, BorderLayout.CENTER);
+        
+        final JPanel boxHorPan = new JPanel();
+        boxHorPan.setLayout(new BoxLayout(boxHorPan, BoxLayout.X_AXIS));
+        
+        final JTextField result = new JTextField("Result:");
+        canvas.add(result, BorderLayout.NORTH);
+              
         frame.setContentPane(canvas);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
@@ -44,7 +54,9 @@ public class MiniGUI {
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                System.out.println(rng.nextInt());
+                final int varRandom = rng.nextInt();
+                System.out.println(varRandom);
+                result.setText(String.valueOf(varRandom));
             }
         });
     }
@@ -68,6 +80,10 @@ public class MiniGUI {
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
+        /*
+         * Let's resize the frame to the minimum size prior to displaying
+         */
+        frame.pack();
         /*
          * OK, ready to pull the frame onscreen
          */
