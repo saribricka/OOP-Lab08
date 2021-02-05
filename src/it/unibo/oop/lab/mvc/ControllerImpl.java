@@ -1,3 +1,4 @@
+
 package it.unibo.oop.lab.mvc;
 
 import java.util.ArrayList;
@@ -5,37 +6,29 @@ import java.util.List;
 import java.util.Objects;
 
 public class ControllerImpl implements Controller {
-    private final List<String> stringHistory;
+    private List<String> historyList;
     private String toPrint;
-
     public ControllerImpl() {
-        stringHistory = new ArrayList<>();
+        historyList = new ArrayList<>();
     }
-
-    public final void setNextString(final String s) {
-        this.toPrint = Objects.requireNonNull(s);
+    @Override
+    public final void setNext(final String strIn) {
+        Objects.requireNonNull(strIn);
+        this.toPrint = strIn;
+        //this.historyList.add(toPrint);    add only when you print it
     }
-
-    /** 
-     * @return the next string to print
-     */
-    public String getNextString() {
+    @Override
+    public final String getNext() {
         return this.toPrint;
     }
-
-    /**
-     * @return a list of strings' history
-     */
-    public List<String> getHistory() {
-        return new ArrayList<>(this.stringHistory);
+    @Override
+    public final List<String> getHistory() {
+        return new ArrayList<>(this.historyList);
     }
-
-    public final void printString() {
-        if (Objects.isNull(this.getNextString())) {
-            throw new IllegalArgumentException();
-        }
-        this.stringHistory.add(this.toPrint);
-        System.out.println(this.getNextString());
+    @Override
+    public final void printCurrent(final String current) {
+        this.toPrint = current;
+        this.historyList.add(this.toPrint);
+        System.out.println(this.getNext());
     }
-
 }

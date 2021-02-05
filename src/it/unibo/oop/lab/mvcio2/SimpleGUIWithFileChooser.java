@@ -1,23 +1,10 @@
 package it.unibo.oop.lab.mvcio2;
 
-import java.awt.BorderLayout;
-import java.util.Objects;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import it.unibo.oop.lab.mvcio.Controller;
-import it.unibo.oop.lab.mvcio.SimpleGUI;
-
 /**
  * A very simple program using a graphical interface.
  * 
  */
 public final class SimpleGUIWithFileChooser {
-    private final JPanel contentPanel;
-    private final Controller myController;
-    private final JPanel selectPathPane = new JPanel();
 
     /*
      * TODO: Starting from the application in mvcio:
@@ -27,6 +14,7 @@ public final class SimpleGUIWithFileChooser {
      * Suggestion: use a second JPanel with a second BorderLayout, put the panel
      * in the North of the main panel, put the text field in the center of the
      * new panel and put the button in the line_end of the new panel.
+     * 
      * 2) The JTextField should be non modifiable. And, should display the
      * current selected file.
      * 
@@ -43,21 +31,5 @@ public final class SimpleGUIWithFileChooser {
      * update the UI: in this example the UI knows when should be updated, so
      * try to keep things separated.
      */
-public SimpleGUIWithFileChooser(final Controller myController, final SimpleGUI gui, JPanel contentPanel) {
-    final SimpleGUI simpleGUI = Objects.requireNonNull(gui);
-    this.contentPanel = contentPanel;
-    this.myController = myController;
-    this.selectPathPane.setLayout(new BorderLayout());
-    final JTextField filePath = new JTextField(this.myController.getCurrentFilePath());
-    filePath.setEditable(false);
-    final JButton browse = new JButton("BROWSE...");
-    this.selectPathPane.add(filePath, BorderLayout.WEST);
-    this.selectPathPane.add(browse, BorderLayout.LINE_END);
-
-    this.contentPanel.add(selectPathPane, BorderLayout.NORTH);
-    this.contentPanel.revalidate();
-}
-
-
 
 }

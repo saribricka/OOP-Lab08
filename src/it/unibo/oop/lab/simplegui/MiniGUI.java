@@ -5,6 +5,7 @@ package it.unibo.oop.lab.simplegui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.TextArea;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
@@ -26,6 +28,7 @@ import javax.swing.JTextField;
 public class MiniGUI {
 
     private static final String TITLE = "A very simple GUI application";
+    private static final String NEWLINE = "\n";
     private static final int PROPORTION = 5;
     private final Random rng = new Random();
     private final JFrame frame = new JFrame(TITLE);
@@ -35,18 +38,14 @@ public class MiniGUI {
      */
     public MiniGUI() {
         final JPanel canvas = new JPanel();
+        final JPanel nuovo = new JPanel();
         canvas.setLayout(new BorderLayout());
-        
+        nuovo.setLayout(new BoxLayout(nuovo, 0));
         final JButton write = new JButton("Print a random number on standard output");
-        canvas.add(write, BorderLayout.CENTER);
-        
-        final JPanel boxHorPan = new JPanel();
-        boxHorPan.setLayout(new BoxLayout(boxHorPan, BoxLayout.X_AXIS));
-        
-        final JTextField result = new JTextField("Result:");
-        canvas.add(result, BorderLayout.NORTH);
-              
-        frame.setContentPane(canvas);
+        nuovo.add(write, BorderLayout.SOUTH);
+        final TextArea result = new TextArea();
+        nuovo.add(result, BorderLayout.NORTH);
+        frame.setContentPane(nuovo);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
          * Handlers
@@ -54,9 +53,16 @@ public class MiniGUI {
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                final int varRandom = rng.nextInt();
-                System.out.println(varRandom);
-                result.setText(String.valueOf(varRandom));
+            	final int value = rng.nextInt();
+            	System.out.println(value);
+            	String mem = String.valueOf(value);
+            	result.setText(String.valueOf(mem));
+//            	byte[] letter = mem.getBytes();
+//            	byte[] res = new byte[letter.length];
+//            	for (int i : letter) {
+//            		res[i] = letter[letter.length];
+//            	}
+//            	result.append(res);
             }
         });
     }
@@ -74,16 +80,13 @@ public class MiniGUI {
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         frame.setSize(sw / PROPORTION, sh / PROPORTION);
+        frame.pack();
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
          * flag makes the OS window manager take care of the default positioning
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
-        /*
-         * Let's resize the frame to the minimum size prior to displaying
-         */
-        frame.pack();
         /*
          * OK, ready to pull the frame onscreen
          */

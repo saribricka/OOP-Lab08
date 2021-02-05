@@ -9,12 +9,14 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
     private static final int ATTEMPTS = 10;
     private final DrawNumber model;
     private final DrawNumberView view;
+    private final Controller controller;
 
     /**
      * 
      */
     public DrawNumberApp() {
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+        this.controller = new ControllerImpl();
+        this.model = new DrawNumberImpl(controller.getMin(), controller.getMax(), controller.getAttemps());
         this.view = new DrawNumberViewImpl();
         this.view.setObserver(this);
         this.view.start();

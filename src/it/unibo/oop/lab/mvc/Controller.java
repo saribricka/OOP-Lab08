@@ -26,12 +26,12 @@ public interface Controller {
      * an IllegalStateException should be thrown
      * 
      */
-    void setNextString(String s);
-    
-    String getNextString();
-    
+    void setNext(String strIn);
+
+    String getNext();
+
     List<String> getHistory();
-    
-    void printString();
+
+    void printCurrent(String current);
 
 }

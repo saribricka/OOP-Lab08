@@ -2,12 +2,8 @@ package it.unibo.oop.lab.mvcio;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-
-import org.apache.commons.io.FileUtils;
 
 /**
  * 
@@ -19,57 +15,55 @@ public class Controller {
      * considers a single file at a time, and it is able to serialize objects in it.
      * 
      * Implement this class with:
-     * 
-     * 1) A method for setting a File as current file
-     * 
-     * 2) A method for getting the current File
-     * 
-     * 3) A method for getting the path (in form of String) of the current File
-     * 
-     * 4) A method that gets a String as input and saves its content on the current
-     * file. This method may throw an IOException.
-     * 
-     * 5) By default, the current file is "output.txt" inside the user home folder.
-     * A String representing the local user home folder can be accessed using
-     * System.getProperty("user.home"). The separator symbol (/ on *nix, \ on
-     * Windows) can be obtained as String through the method
-     * System.getProperty("file.separator"). The combined use of those methods leads
-     * to a software that runs correctly on every platform.
+     */ 
+    private String path = System.getProperty("user.home")
+            + System.getProperty("file.separator")
+            + "output.txt";
+    private File currentFile = new File(this.path);
+
+    /* 1) A method for setting a File as current file
      */
+    public final void setCurrentFile(final File file) {
+        Objects.requireNonNull(file);
+        this.currentFile = file;
+        this.path = file.getAbsolutePath();
+    }
 
-    private String currentFilePath = System.getProperty("user.home") + System.getProperty("file.separator") + "output.txt";
-    private File currentFile = new File(this.currentFilePath);
-
+    /* 2) A method for getting the current File
+     */ 
     public final File getCurrentFile() {
         return this.currentFile;
     }
 
-    public final void setCurrentFile(final File newFile) {
-        Objects.requireNonNull(newFile);
-        this.currentFile = newFile;
-        this.currentFilePath = newFile.getAbsolutePath();   //What's the diff between getPath and getAbsolutePath
+    /* 3) A method for getting the path (in form of String) of the current File
+    */ 
+    public final String getPATH() {
+        return this.path;
     }
 
-    public final String getCurrentFilePath() {
-        return this.currentFile.getPath();
+    public final void setPATH(final String path) {
+        Objects.requireNonNull(path);
+        this.path = path;
     }
 
-    public final void setCurrentFilePath(final String newFilePath) {
-        Objects.requireNonNull(newFilePath);
-        final File newFile = new File(newFilePath);
-        if (!newFile.isFile()) {
-            throw new IllegalArgumentException(newFile.getAbsolutePath() + "cannot be used as a file");
+    /* 4) A method that gets a String as input and saves its content on the current
+    * file. This method may throw an IOException.
+    */
+    public final void saveOnFile(final String strIn) throws FileNotFoundException {
+        try {
+            PrintStream ps = new PrintStream(currentFile);
+            ps.print(strIn);
+            System.out.println("Printing: " + strIn);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        this.currentFile = newFile;
-        this.currentFilePath = newFilePath;
     }
 
-    /**
-     * 
-     * @param textFile
-     * @throws IOException
-     */
-    public final void stringFile(final String textFile) throws IOException {
-            FileUtils.write(this.currentFile, textFile, StandardCharsets.UTF_8);
-    }
-} 
+    /* 5) By default, the current file is "output.txt" inside the user home folder.
+    * A String representing the local user home folder can be accessed using
+    * System.getProperty("user.home"). The separator symbol (/ on *nix, \ on
+    * Windows) can be obtained as String through the method
+    * System.getProperty("file.separator"). The combined use of those methods leads
+    * to a software that runs correctly on every platform.
+    */
+}

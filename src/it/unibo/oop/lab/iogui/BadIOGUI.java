@@ -5,14 +5,16 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -39,20 +41,20 @@ public class BadIOGUI {
     private final Random rng = new Random();
     private final JFrame frame = new JFrame(TITLE);
 
-
     /**
      * 
      */
     public BadIOGUI() {
         final JPanel canvas = new JPanel();
         canvas.setLayout(new BorderLayout());
-        final JPanel center = new JPanel();
-        center.setLayout(new BoxLayout(center, BoxLayout.X_AXIS));
+        final JPanel tipo = new JPanel();
+        tipo.setLayout(new BoxLayout(tipo, BoxLayout.X_AXIS));
         final JButton write = new JButton("Write on file");
-        center.add(write, BorderLayout.CENTER);
-        final JButton read = new JButton("Read");
-        center.add(read);
-        frame.setContentPane(center);
+        canvas.add(write, BorderLayout.CENTER);
+        tipo.add(write);
+        final JButton read = new JButton("read");
+        tipo.add(read);
+        frame.setContentPane(tipo);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /*
          * Handlers
@@ -68,30 +70,39 @@ public class BadIOGUI {
                  * your UI becomes completely unresponsive.
                  */
                 try (PrintStream ps = new PrintStream(PATH)) {
-                    ps.print(rng.nextInt());
+                    final int nextInt = rng.nextInt();
+                    ps.print(nextInt);
+                    System.out.println("random is " + nextInt);
                 } catch (FileNotFoundException e1) {
                     JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
                     e1.printStackTrace();
                 }
             }
         });
-
         read.addActionListener(new ActionListener() {
-            @SuppressWarnings("deprecation")
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                /*
-                 * It will read the same file as write. And print it in the terminal
-                 */
-                final File fileToRead = new File(PATH);
-                try {
-                    final String readFile = FileUtils.readFileToString(fileToRead);
-                    System.out.println(readFile);
-                } catch (final IOException e2) {
-                    JOptionPane.showMessageDialog(BadIOGUI.this.frame, e2, "File Error", JOptionPane.ERROR_MESSAGE);
-                    e2.printStackTrace();
+        	@Override
+			public void actionPerformed(final ActionEvent e) {
+//        	    //first try with bufferReader
+//				final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//				System.out.println(reader.toString());
+        	    //second try with scanner
+//        	    final Scanner scan = new Scanner(System.in);
+//        	    try {
+//                    Long random = scan.nextLong();
+//                    System.out.println(random);
+//                } catch (IOException e2) {
+//                    e2.printStackTrace();
+//                }
+        	    //third try with File
+        	    final File file = new File(PATH);
+        	    try {
+        	        final String reader = FileUtils.readFileToString(file);
+        	        System.out.println(reader);
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(frame, e1, "Error", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
                 }
-            }
+        	}
         });
     }
 
@@ -108,9 +119,6 @@ public class BadIOGUI {
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         frame.setSize(sw / PROPORTION, sh / PROPORTION);
-        /*
-         * To reduce the windows's size into its subcomponents' size.
-         */
         frame.pack();
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
